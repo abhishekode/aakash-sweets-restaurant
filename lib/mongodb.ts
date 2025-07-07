@@ -6,13 +6,26 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable');
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+// Add this at the top level to declare the global type properly
+declare global {
+  // only declare if not already defined
+  // to prevent duplicate declaration error in dev
+  var mongooseCache: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
 }
 
-async function connectDB() {
+let cached = global.mongooseCache;
+
+if (!cached) {
+  cached = global.mongooseCache = {
+    conn: null,
+    promise: null,
+  };
+}
+
+async function connectDB(): Promise<typeof mongoose> {
   if (cached.conn) {
     return cached.conn;
   }
@@ -22,9 +35,7 @@ async function connectDB() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(MONGODB_URI, opts);
   }
 
   try {
@@ -38,10 +49,3 @@ async function connectDB() {
 }
 
 export default connectDB;
-
-declare global {
-  var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
-}

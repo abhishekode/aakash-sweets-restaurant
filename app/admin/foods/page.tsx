@@ -11,10 +11,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Edit,
+  Trash2,
   Search,
   UtensilsCrossed,
   Save,
@@ -33,6 +33,20 @@ const fadeInUp = {
   transition: { duration: 0.6 }
 };
 
+type FoodItem = {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: {
+    full: number;
+    half?: number; // Optional half price
+  };
+  image: string;
+  isAvailable: boolean;
+  createdAt: Date;
+};
+
 const foodItemSchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters'),
   category: z.string().min(1, 'Please select a category'),
@@ -40,7 +54,7 @@ const foodItemSchema = z.object({
   priceHalf: z.string().optional(),
   priceFull: z.string().min(1, 'Full price is required'),
   image: z.string().url('Please enter a valid image URL'),
-  isAvailable: z.boolean().default(true),
+  isAvailable: z.boolean(),
 });
 
 type FoodItemFormData = z.infer<typeof foodItemSchema>;
@@ -88,8 +102,9 @@ const mockFoodItems = [
 ];
 
 export default function AdminFoodsPage() {
-  const [foodItems, setFoodItems] = useState(mockFoodItems);
-  const [filteredItems, setFilteredItems] = useState(mockFoodItems);
+  const [foodItems, setFoodItems] = useState<FoodItem[]>(mockFoodItems);
+  const [filteredItems, setFilteredItems] = useState<FoodItem[]>(mockFoodItems);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [isAddingItem, setIsAddingItem] = useState(false);
@@ -140,14 +155,14 @@ export default function AdminFoodsPage() {
         prev.map(item =>
           item.id === editingItem.id
             ? {
-                ...item,
-                name: data.name,
-                category: data.category,
-                description: data.description,
-                price: priceData,
-                image: data.image,
-                isAvailable: data.isAvailable
-              }
+              ...item,
+              name: data.name,
+              category: data.category,
+              description: data.description,
+              price: priceData,
+              image: data.image,
+              isAvailable: data.isAvailable
+            }
             : item
         )
       );

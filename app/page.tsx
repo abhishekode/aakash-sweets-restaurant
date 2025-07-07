@@ -154,7 +154,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              <Button size="lg" variant="outline" className="border-white text-gray-800 hover:bg-white hover:text-black">
                 <Link href="/qr-menu">Scan QR Menu</Link>
               </Button>
             </div>
@@ -391,7 +391,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-orange-500">
+              <Button size="lg" variant="outline" className="border-white text-gray-900 hover:bg-white hover:text-orange-500">
                 <Link href="/contact" className="flex items-center">
                   <Phone className="mr-2 h-4 w-4" />
                   Call Us
